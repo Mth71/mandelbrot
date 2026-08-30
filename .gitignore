@@ -1,0 +1,10 @@
+#Binários compilados
+src/Mandelbrot
+*.o
+
+#Saídas geradas pelo programa
+*.pmg
+times.txt
+
+#VS code 
+.vscode/
