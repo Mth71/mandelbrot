@@ -4,7 +4,7 @@
 
 int parse_args(int argc, char*argv[], config*cfg){
     if(argc != 5){
-        fprintf(stderr, "uso: %s <largura> <altura> <max_interacoes> <num_threads>\n");
+        fprintf(stderr, "uso: %s <largura> <altura> <max_interacoes> <num_threads>\n", argv[0]);
         return -1;
     }
 
