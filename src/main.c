@@ -4,6 +4,7 @@
 #include "serial.h"
 #include "matriz_saida.h"
 #include "timer.h"
+#include "openmp.h"
 
 int main(int argc, char *argv[]) {
     config cfg;
@@ -40,9 +41,29 @@ int main(int argc, char *argv[]) {
         free(intensidades);
         return 1;
     }
+    
+    
     fprintf(times, "serial: %.6f segundos\n", timer_elapsed_seconds(&t));
+  
+    
+    //openMP
+    timer_start(&t);
+    mandelbrot_openmp(intensidades, cfg.largura, cfg.altura, cfg.max_inter, cfg.num_threads);
+    timer_stop(&t);
+
+    snprintf(filename, sizeof(filename), "mandelbrot_mcr_openmp.pmg");
+    if(escrever_matriz(filename, intensidades, cfg.largura, cfg.altura) != 0){
+        fprintf(stderr, "erro: falha ao criar arquivo de saida '%s'\n", filename);
+        fclose(times);
+        free(intensidades);
+        return 1;
+    }
+    fprintf(times, "openmp: %.6f segundos\n", timer_elapsed_seconds(&t));
 
     fclose(times);
     free(intensidades);
     return 0;
+
+
+
 }
