@@ -115,7 +115,17 @@ int escrever_matriz_pthreads2(const char* filename,int *intensidades,int largura
         args[i].saida = saida;
         args[i].tamanho_linha = tamanho_linha;
 
-        pthread_create(&threads[i],NULL,worker_saida,&args[i]);
+        int erro=pthread_create(&threads[i],NULL,worker_saida,&args[i]);
+        if(erro != 0 ){
+            fprintf(stderr, "erro: falha ao criar thread %d (código %d)\n", i, erro);
+            for(int j =0; j<i;j++){
+                pthread_join(threads[j], NULL);
+            }
+            free(saida);
+            fclose(f);
+            return -1;
+        }
+
     }
 
 

@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
     timer_start(&t);
     mandelbrot_openmp(intensidades, cfg.largura, cfg.altura, cfg.max_inter, cfg.num_threads);
     
-    snprintf(filename, sizeof(filename), "mandelbrot_mcr_openmp.pmg");
+    snprintf(filename, sizeof(filename), "mandelbrot_mcr_openmp.pgm");
     if(escrever_matriz(filename, intensidades, cfg.largura, cfg.altura) != 0){
         fprintf(stderr, "erro: falha ao criar arquivo de saida '%s'\n", filename);
         fclose(times);
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     timer_start(&t);
     mandelbrot_pthreads1(intensidades, cfg.largura, cfg.altura, cfg.max_inter, cfg.num_threads);
     
-    snprintf(filename, sizeof(filename), "mandelbrot_mcr_pthreads1.pmg");
+    snprintf(filename, sizeof(filename), "mandelbrot_mcr_pthreads1.pgm");
     if(escrever_matriz(filename, intensidades, cfg.largura, cfg.altura) != 0){
         fprintf(stderr, "erro: falha ao criar arquivo de saida '%s'\n", filename);
         fclose(times);
@@ -79,7 +79,13 @@ int main(int argc, char *argv[]) {
 
     //pthreads2
     timer_start(&t);
-    mandelbrot_pthreads2(intensidades, cfg.largura, cfg.altura, cfg.max_inter, cfg.num_threads);
+    snprintf(filename,sizeof(filename), "mandelbrot_mcr_pthreads2.pgm");
+    if(mandelbrot_pthreads2(filename,intensidades,cfg.largura,cfg.altura,cfg.max_inter,cfg.num_threads) != 0){
+        fprintf(stderr, "falha ao gerar arquivo de saida '%s'\n", filename);
+        fclose(times);
+        free(intensidades);
+        return 1;
+    }
     timer_stop(&t);
     
     fprintf(times, "phtreads2: %.6f segundos\n", timer_elapsed_seconds(&t));
