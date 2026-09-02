@@ -5,6 +5,7 @@
 #include "matriz_saida.h"
 #include "timer.h"
 #include "openmp.h"
+#include "pthreads1.h"
 
 int main(int argc, char *argv[]) {
     config cfg;
@@ -60,10 +61,23 @@ int main(int argc, char *argv[]) {
     }
     fprintf(times, "openmp: %.6f segundos\n", timer_elapsed_seconds(&t));
 
+
+    //pthreads1
+    timer_start(&t);
+    mandelbrot_pthreads1(intensidades, cfg.largura, cfg.altura, cfg.max_inter, cfg.num_threads);
+    timer_stop(&t);
+
+    snprintf(filename, sizeof(filename), "mandelbrot_mcr_pthreads1.pmg");
+    if(escrever_matriz(filename, intensidades, cfg.largura, cfg.altura) != 0){
+        fprintf(stderr, "erro: falha ao criar arquivo de saida '%s'\n", filename);
+        fclose(times);
+        free(intensidades);
+        return 1;
+    }
+    fprintf(times, "pthreads1: %.6f segundos\n", timer_elapsed_seconds(&t));
+    
+    
     fclose(times);
     free(intensidades);
     return 0;
-
-
-
 }
